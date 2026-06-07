@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-
-export default class Register extends Component {
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {actionCreators as registerActionsCreators} from './store';
+class Register extends Component {
     state = {
         username: '',
         password: '',
@@ -8,7 +10,8 @@ export default class Register extends Component {
     }
     handleSubmit = e=>{
         e.preventDefault();
-        console.log(this.state);
+        // this.props.registerFn.registerAc();
+        console.log(this.props.registerData.name);
     }
     handleChange = e=>{
         this.setState({
@@ -36,3 +39,14 @@ export default class Register extends Component {
         )
     }
 }
+const mapStateToProps = state => {
+    return {
+        registerData: state.register
+    };
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        registerFn: bindActionCreators(registerActionsCreators, dispatch)
+    };
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Register);

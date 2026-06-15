@@ -27,8 +27,20 @@ class Register extends Component {
         // console.log(this.props.registerData.name);
         const err = data.error || data.message || data.err || '';
         const isUserExists = /用户已经存在|已存在/.test(err);
+        const isEmailDuplicate = /Duplicate entry .*uni_user_email/.test(err);
         if (isUserExists) {
             window.alert(err);
+            return;
+        }
+        if (isEmailDuplicate) {
+            this.setState({
+                errMsg: {
+                    username: '',
+                    password: '',
+                    email: '该邮箱已注册过',
+                    verificationCode: '',
+                }
+            });
             return;
         }
         if (data.status !== 200) {
@@ -43,6 +55,8 @@ class Register extends Component {
             });
         } else {
             this.setState({ errMsg: { username: '', password: '', email: '', verificationCode: '' } });
+            window.alert('注册成功');
+            window.location.href = '/login';
         }
     }
     handleChange = e => {

@@ -1,24 +1,25 @@
 import React, { Component } from 'react'
-import {Link} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 export default class index extends Component {
     render() {
         return (
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <Link className="navbar-brand" to="/">Home</Link>
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav">
-                        <li className="nav-item active">
-                            <Link className="nav-link" to="/register">注册 <span className="sr-only">(current)</span></Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/login">登陆</Link>
-                        </li>
-                    </ul>
-                </div>
+            <nav className="app-nav" aria-label="主导航">
+                <NavLink className="app-brand" to="/">
+                    <span className="brand-mark" aria-hidden="true">A</span>
+                    <span>AresuMei</span>
+                </NavLink>
+                <ul className="app-nav-list">
+                    <li>
+                        <NavLink className={({ isActive }) => isActive ? 'app-nav-link active' : 'app-nav-link'} to="/register">
+                            注册
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink className={({ isActive }) => isActive ? 'app-nav-link active' : 'app-nav-link'} to="/login">
+                            登录
+                        </NavLink>
+                    </li>
+                </ul>
             </nav>
         )
     }

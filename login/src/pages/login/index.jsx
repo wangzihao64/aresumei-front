@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 import { actionCreators as loginActionCreators } from './store';
 
 class Login extends Component {
@@ -58,65 +59,87 @@ class Login extends Component {
         const { errMsg } = this.state;
 
         return (
-            <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light" style={{ padding: '20px' }}>
-                <div className="card shadow-sm" style={{ width: '100%', maxWidth: '440px', borderRadius: '18px' }}>
-                    <div className="card-body p-5">
-                        <div className="text-center mb-4">
-                            <div className="mx-auto mb-3" style={{ width: '70px', height: '70px', borderRadius: '50%', backgroundColor: '#f0f4ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <span style={{ fontSize: '32px' }}>🔐</span>
+            <section className="auth-page" aria-labelledby="login-title">
+                <div className="auth-hero">
+                    <div className="auth-hero-content">
+                        <span className="auth-kicker">欢迎回来</span>
+                        <h1>继续完善你的求职资料</h1>
+                        <p>用稳定清晰的账号入口管理简历内容、联系方式和投递前需要确认的信息。</p>
+                        <div className="auth-stat-grid">
+                            <div>
+                                <strong>3步</strong>
+                                <span>完成账号登录</span>
                             </div>
-                            <h4 className="card-title mb-1">用户登录</h4>
-                            <p className="text-muted small mb-0">输入账号和密码登录系统。</p>
+                            <div>
+                                <strong>24h</strong>
+                                <span>随时继续编辑</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="auth-panel-wrap">
+                    <div className="auth-panel">
+                        <div className="auth-heading">
+                            <span className="eyebrow">登录</span>
+                            <h2 id="login-title">用户登录</h2>
+                            <p>输入用户名和密码进入系统。</p>
                         </div>
 
-                        <form onSubmit={this.handleSubmit}>
-                            <div className="form-group mb-3">
-                                <label htmlFor="username" className="font-weight-bold">用户名</label>
-                                <div className="input-group shadow-sm rounded-pill overflow-hidden">
-                                    <span className="input-group-text bg-white border-0" style={{ width: '56px', justifyContent: 'center' }}>👤</span>
+                        <form className="auth-form" onSubmit={this.handleSubmit}>
+                            <div className="field">
+                                <label htmlFor="username">用户名</label>
+                                <div className={errMsg.username ? 'field-control has-error' : 'field-control'}>
+                                    <span className="field-icon" aria-hidden="true">ID</span>
                                     <input
                                         value={username}
                                         type="text"
-                                        className="form-control border-0"
                                         name="username"
                                         id="username"
                                         onChange={this.handleChange}
-                                        placeholder="请输入用户名"
+                                        placeholder="例如 zhangsan…"
+                                        autoComplete="username"
+                                        spellCheck={false}
+                                        aria-invalid={Boolean(errMsg.username)}
+                                        aria-describedby={errMsg.username ? 'login-username-error' : undefined}
                                     />
                                 </div>
-                                {errMsg.username && <small className="form-text text-danger mt-2">{errMsg.username}</small>}
+                                {errMsg.username && <small id="login-username-error" className="field-error" aria-live="polite">{errMsg.username}</small>}
                             </div>
 
-                            <div className="form-group mb-4">
-                                <label htmlFor="password" className="font-weight-bold">密码</label>
-                                <div className="input-group shadow-sm rounded-pill overflow-hidden">
-                                    <span className="input-group-text bg-white border-0" style={{ width: '56px', justifyContent: 'center' }}>🔒</span>
+                            <div className="field">
+                                <label htmlFor="password">密码</label>
+                                <div className={errMsg.password ? 'field-control has-error' : 'field-control'}>
+                                    <span className="field-icon" aria-hidden="true">PW</span>
                                     <input
                                         value={password}
                                         type="password"
-                                        className="form-control border-0"
                                         name="password"
                                         id="password"
                                         onChange={this.handleChange}
-                                        placeholder="请输入密码"
+                                        placeholder="输入登录密码…"
+                                        autoComplete="current-password"
+                                        aria-invalid={Boolean(errMsg.password)}
+                                        aria-describedby={errMsg.password ? 'login-password-error' : 'login-password-help'}
                                     />
                                 </div>
                                 {errMsg.password ? (
-                                    <small className="form-text text-danger mt-2">{errMsg.password}</small>
+                                    <small id="login-password-error" className="field-error" aria-live="polite">{errMsg.password}</small>
                                 ) : (
-                                    <small className="form-text text-muted mt-2">请输入登录密码。</small>
+                                    <small id="login-password-help" className="field-help">请输入登录密码。</small>
                                 )}
                             </div>
 
-                            {errMsg.general && <div className="alert alert-danger py-2">{errMsg.general}</div>}
+                            {errMsg.general && <div className="form-alert error" role="alert" aria-live="polite">{errMsg.general}</div>}
 
-                            <button type="submit" className="btn btn-primary btn-block btn-lg" style={{ borderRadius: '12px', padding: '12px 0' }}>
+                            <button type="submit" className="primary-action">
                                 登录
                             </button>
+                            <p className="auth-switch">还没有账号？<Link to="/register">立即注册</Link></p>
                         </form>
                     </div>
                 </div>
-            </div>
+            </section>
         )
     }
 }

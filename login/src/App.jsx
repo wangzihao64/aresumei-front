@@ -12,12 +12,15 @@ export default class App extends Component {
     render() {
         return (
             <Router>
+                <a className="skip-link" href="#main-content">跳到主要内容</a>
                 <Navigator />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                </Routes>
+                <main id="main-content" className="app-main">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                    </Routes>
+                </main>
             </Router>
         )
     }

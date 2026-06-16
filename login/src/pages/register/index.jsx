@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import { Link } from 'react-router-dom';
 import {actionCreators as registerActionsCreators} from './store';
 class Register extends Component {
     state = {
@@ -93,108 +94,138 @@ class Register extends Component {
         const { username, password, email, verificationCode } = this.state.userInfo;
         const { errMsg, emailCodeStatus, isSendingCode } = this.state;
         return (
-            <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light" style={{ padding: '20px' }}>
-                <div className="card shadow-sm" style={{ width: '100%', maxWidth: '520px', borderRadius: '18px' }}>
-                    <div className="card-body p-5">
-                        <div className="text-center mb-4">
-                            <div className="mx-auto mb-3" style={{ width: '72px', height: '72px', borderRadius: '50%', backgroundColor: '#f0f4ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <span style={{ fontSize: '34px' }}>📝</span>
+            <section className="auth-page" aria-labelledby="register-title">
+                <div className="auth-hero register">
+                    <div className="auth-hero-content">
+                        <span className="auth-kicker">创建账号</span>
+                        <h1>建立你的简历资料入口</h1>
+                        <p>用邮箱验证码完成注册，后续可集中维护个人信息、工作经历和简历内容。</p>
+                        <div className="auth-stat-grid">
+                            <div>
+                                <strong>1封</strong>
+                                <span>邮箱验证码</span>
                             </div>
-                            <h4 className="card-title mb-1">新用户注册</h4>
-                            <p className="text-muted small mb-0">填写信息并获取邮箱验证码，完成注册。</p>
+                            <div>
+                                <strong>5项</strong>
+                                <span>核心账号信息</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="auth-panel-wrap">
+                    <div className="auth-panel register-panel">
+                        <div className="auth-heading">
+                            <span className="eyebrow">注册</span>
+                            <h2 id="register-title">新用户注册</h2>
+                            <p>填写信息并获取邮箱验证码，完成账号创建。</p>
                         </div>
 
-                        <form onSubmit={this.handleSubmit}>
-                            <div className="form-group mb-3">
-                                <label htmlFor="username" className="font-weight-bold">用户名</label>
-                                <div className="input-group shadow-sm rounded-pill overflow-hidden">
-                                    <span className="input-group-text bg-white border-0" style={{ width: '56px', justifyContent: 'center' }}>👤</span>
+                        <form className="auth-form" onSubmit={this.handleSubmit}>
+                            <div className="field">
+                                <label htmlFor="username">用户名</label>
+                                <div className={errMsg.username ? 'field-control has-error' : 'field-control'}>
+                                    <span className="field-icon" aria-hidden="true">ID</span>
                                     <input
                                         value={username}
                                         type="text"
-                                        className="form-control border-0"
                                         name="username"
                                         id="username"
                                         onChange={this.handleChange}
-                                        placeholder="请输入用户名"
+                                        placeholder="例如 zhangsan…"
+                                        autoComplete="username"
+                                        spellCheck={false}
+                                        aria-invalid={Boolean(errMsg.username)}
+                                        aria-describedby={errMsg.username ? 'register-username-error' : undefined}
                                     />
                                 </div>
-                                {errMsg.username && <small className="form-text text-danger mt-2">{errMsg.username}</small>}
+                                {errMsg.username && <small id="register-username-error" className="field-error" aria-live="polite">{errMsg.username}</small>}
                             </div>
 
-                            <div className="form-group mb-3">
-                                <label htmlFor="email" className="font-weight-bold">邮箱</label>
-                                <div className="input-group shadow-sm rounded-pill overflow-hidden">
-                                    <span className="input-group-text bg-white border-0" style={{ width: '56px', justifyContent: 'center' }}>📧</span>
+                            <div className="field">
+                                <label htmlFor="email">邮箱</label>
+                                <div className={errMsg.email ? 'field-control has-error' : 'field-control'}>
+                                    <span className="field-icon" aria-hidden="true">@</span>
                                     <input
                                         value={email}
                                         type="email"
-                                        className="form-control border-0"
                                         name="email"
                                         id="email"
                                         onChange={this.handleChange}
-                                        placeholder="请输入邮箱"
+                                        placeholder="name@example.com…"
+                                        autoComplete="email"
+                                        spellCheck={false}
+                                        aria-invalid={Boolean(errMsg.email)}
+                                        aria-describedby={errMsg.email ? 'register-email-error' : undefined}
                                     />
                                 </div>
-                                {errMsg.email && <small className="form-text text-danger mt-2">{errMsg.email}</small>}
+                                {errMsg.email && <small id="register-email-error" className="field-error" aria-live="polite">{errMsg.email}</small>}
                             </div>
 
-                            <div className="form-row align-items-center mb-3">
-                                <div className="col">
-                                    <label htmlFor="verificationCode" className="font-weight-bold">验证码</label>
-                                    <input
-                                        value={verificationCode}
-                                        type="text"
-                                        className="form-control shadow-sm"
-                                        name="verificationCode"
-                                        id="verificationCode"
-                                        onChange={this.handleChange}
-                                        placeholder="请输入验证码"
-                                    />
-                                    {errMsg.verificationCode && <small className="form-text text-danger mt-2">{errMsg.verificationCode}</small>}
+                            <div className="verification-row">
+                                <div className="field">
+                                    <label htmlFor="verificationCode">验证码</label>
+                                    <div className={errMsg.verificationCode ? 'field-control has-error' : 'field-control'}>
+                                        <span className="field-icon" aria-hidden="true">VC</span>
+                                        <input
+                                            value={verificationCode}
+                                            type="text"
+                                            name="verificationCode"
+                                            id="verificationCode"
+                                            onChange={this.handleChange}
+                                            placeholder="例如 123456…"
+                                            inputMode="numeric"
+                                            autoComplete="one-time-code"
+                                            spellCheck={false}
+                                            aria-invalid={Boolean(errMsg.verificationCode)}
+                                            aria-describedby={errMsg.verificationCode ? 'register-code-error' : undefined}
+                                        />
+                                    </div>
+                                    {errMsg.verificationCode && <small id="register-code-error" className="field-error" aria-live="polite">{errMsg.verificationCode}</small>}
                                 </div>
-                                <div className="col-auto mt-4 pt-1">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-primary"
-                                        onClick={this.handleSendCode}
-                                        disabled={isSendingCode}
-                                    >
-                                        {isSendingCode ? '发送中...' : '获取验证码'}
-                                    </button>
-                                </div>
+                                <button
+                                    type="button"
+                                    className="secondary-action code-action"
+                                    onClick={this.handleSendCode}
+                                    disabled={isSendingCode}
+                                >
+                                    {isSendingCode ? '发送中…' : '获取验证码'}
+                                </button>
                             </div>
 
-                            {emailCodeStatus && <div className="alert alert-info py-2" role="alert">{emailCodeStatus}</div>}
+                            {emailCodeStatus && <div className="form-alert info" role="status">{emailCodeStatus}</div>}
 
-                            <div className="form-group mb-4">
-                                <label htmlFor="password" className="font-weight-bold">密码</label>
-                                <div className="input-group shadow-sm rounded-pill overflow-hidden">
-                                    <span className="input-group-text bg-white border-0" style={{ width: '56px', justifyContent: 'center' }}>🔒</span>
+                            <div className="field">
+                                <label htmlFor="password">密码</label>
+                                <div className={errMsg.password ? 'field-control has-error' : 'field-control'}>
+                                    <span className="field-icon" aria-hidden="true">PW</span>
                                     <input
                                         value={password}
                                         type="password"
-                                        className="form-control border-0"
                                         name="password"
                                         id="password"
                                         onChange={this.handleChange}
-                                        placeholder="请输入密码"
+                                        placeholder="至少 6 位密码…"
+                                        autoComplete="new-password"
+                                        aria-invalid={Boolean(errMsg.password)}
+                                        aria-describedby={errMsg.password ? 'register-password-error' : 'register-password-help'}
                                     />
                                 </div>
                                 {errMsg.password ? (
-                                    <small className="form-text text-danger mt-2">{errMsg.password}</small>
+                                    <small id="register-password-error" className="field-error" aria-live="polite">{errMsg.password}</small>
                                 ) : (
-                                    <small className="form-text text-muted mt-2">建议密码长度不少于 6 位。</small>
+                                    <small id="register-password-help" className="field-help">建议密码长度不少于 6 位。</small>
                                 )}
                             </div>
 
-                            <button type="submit" className="btn btn-primary btn-block btn-lg" style={{ borderRadius: '12px', padding: '12px 0' }}>
+                            <button type="submit" className="primary-action">
                                 立即注册
                             </button>
+                            <p className="auth-switch">已有账号？<Link to="/login">去登录</Link></p>
                         </form>
                     </div>
                 </div>
-            </div>
+            </section>
         )
     }
 }

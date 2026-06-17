@@ -8,6 +8,8 @@ import Home from './pages/home'
 import Register from './pages/register'
 //登录
 import Login from './pages/login'
+//简历上传
+import ResumeUpload from './pages/resumeUpload'
 export default class App extends Component {
     render() {
         return (
@@ -19,6 +21,7 @@ export default class App extends Component {
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
+                        <Route path="/resume-upload" element={<ResumeUpload />} />
                     </Routes>
                 </main>
             </Router>

@@ -10,6 +10,11 @@ export default class index extends Component {
                 </NavLink>
                 <ul className="app-nav-list">
                     <li>
+                        <NavLink className={({ isActive }) => isActive ? 'app-nav-link active' : 'app-nav-link'} to="/resume-upload">
+                            面试问题
+                        </NavLink>
+                    </li>
+                    <li>
                         <NavLink className={({ isActive }) => isActive ? 'app-nav-link active' : 'app-nav-link'} to="/register">
                             注册
                         </NavLink>

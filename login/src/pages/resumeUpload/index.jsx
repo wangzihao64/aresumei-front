@@ -61,38 +61,52 @@ export default class ResumeUpload extends Component {
         return (
             <section className="upload-page" aria-labelledby="resume-upload-title">
                 <div className="upload-shell">
-                    <div className="upload-dialog" role="dialog" aria-labelledby="resume-upload-title" aria-describedby="resume-upload-desc">
-                        <div className="upload-heading">
-                            <span className="eyebrow">简历上传</span>
-                            <h1 id="resume-upload-title">请上传简历</h1>
-                        </div>
+                    <div className="upload-heading">
+                        <span className="eyebrow">面试问题</span>
+                        <h1 id="resume-upload-title">请上传简历</h1>
+                        <p id="resume-upload-desc">上传后根据简历内容生成更贴合岗位经历的面试问题。</p>
+                    </div>
 
-                        <form className="upload-form" onSubmit={this.handleSubmit}>
-                            <label className={file ? 'upload-dropzone has-file' : 'upload-dropzone'} htmlFor="resumeFile">
-                                <span className="upload-icon" aria-hidden="true">CV</span>
-                                <span className="upload-copy">
-                                    <strong>{file ? file.name : '选择简历文件'}</strong>
-                                    <small>{file ? `${Math.ceil(file.size / 1024)} KB` : '支持 PDF、DOC、DOCX 格式'}</small>
-                                </span>
-                                <input
-                                    id="resumeFile"
-                                    name="file"
-                                    type="file"
-                                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                    onChange={this.handleFileChange}
-                                    aria-describedby="resume-upload-desc resume-file-help"
-                                />
-                            </label>
+                    <form className="upload-prompt" onSubmit={this.handleSubmit}>
+                        <label className={file ? 'upload-dropzone has-file' : 'upload-dropzone'} htmlFor="resumeFile">
+                            <span className="upload-copy">
+                                <strong>{file ? file.name : '上传一份简历，开始生成面试问题'}</strong>
+                                <small>{file ? `${Math.ceil(file.size / 1024)} KB · 可重新选择文件` : '支持 PDF、DOC、DOCX'}</small>
+                            </span>
+                            <span className="upload-icon" aria-hidden="true">
+                                <span></span>
+                            </span>
+                            <input
+                                id="resumeFile"
+                                name="file"
+                                type="file"
+                                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                onChange={this.handleFileChange}
+                                aria-describedby="resume-upload-desc"
+                            />
+                        </label>
 
-                            
+                        <button type="submit" className="upload-submit" disabled={isUploading} aria-label="上传简历">
+                            {isUploading ? (
+                                <span className="button-spinner" aria-hidden="true"></span>
+                            ) : (
+                                <span aria-hidden="true">↑</span>
+                            )}
+                        </button>
+                    </form>
+
+                    {(error || status) && (
+                        <div className="upload-feedback">
                             {error && <div className="form-alert error" role="alert" aria-live="polite">{error}</div>}
                             {status && <div className="form-alert info" role="status">{status}</div>}
+                        </div>
+                    )}
 
-                            <button type="submit" className="primary-action" disabled={isUploading}>
-                                {isUploading && <span className="button-spinner" aria-hidden="true"></span>}
-                                {isUploading ? '上传中…' : '上传简历'}
-                            </button>
-                        </form>
+                    <div className="prompt-suggestions" aria-label="面试问题方向">
+                        <span>项目经历追问</span>
+                        <span>技术栈深挖</span>
+                        <span>行为面试准备</span>
+                        <span>岗位匹配分析</span>
                     </div>
                 </div>
             </section>

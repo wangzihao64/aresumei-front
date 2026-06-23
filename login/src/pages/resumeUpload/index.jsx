@@ -4,6 +4,7 @@ import axios, { getToken } from '../../utils/request';
 export default class ResumeUpload extends Component {
     state = {
         file: null,
+        resumeId: null,
         status: '',
         error: '',
         isUploading: false,
@@ -14,12 +15,8 @@ export default class ResumeUpload extends Component {
         return typeof value === 'string' && value.trim().toLowerCase() === 'ok';
     }
 
-    buildResumeAnswerPayload = uploadResult => {
-        const data = uploadResult?.data ?? uploadResult?.result ?? uploadResult?.questions ?? uploadResult?.answer ?? uploadResult;
-        if (data == null) {
-            return {};
-        }
-        return { resume: data };
+    buildResumeAnswerPayload = resumeId => {
+        return resumeId ? { resume_id: resumeId } : {};
     }
 
     formatBackendResult = data => {
@@ -81,8 +78,9 @@ export default class ResumeUpload extends Component {
 
             const uploadMessage = uploadData?.message || uploadData?.msg || '';
             const uploadStatus = this.isOkResponse(uploadMessage) ? '' : (uploadMessage || '简历上传成功。');
+            const resumeId = uploadData?.data?.resume_id ?? uploadData?.resume_id ?? null;
 
-            const resumeAnswerPayload = this.buildResumeAnswerPayload(uploadData);
+            const resumeAnswerPayload = this.buildResumeAnswerPayload(resumeId);
             const { data: answerData } = await axios.post('/api/v1/user/resume-answer', resumeAnswerPayload, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -94,6 +92,7 @@ export default class ResumeUpload extends Component {
             const statusText = this.isOkResponse(answerMessage) ? uploadStatus : (answerMessage || uploadStatus);
 
             this.setState({
+                resumeId,
                 status: statusText,
                 error: '',
                 backendResult: formattedResult,

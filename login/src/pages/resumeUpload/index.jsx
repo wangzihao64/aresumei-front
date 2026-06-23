@@ -10,11 +10,23 @@ export default class ResumeUpload extends Component {
         backendResult: '',
     }
 
+    isOkResponse = value => {
+        return typeof value === 'string' && value.trim().toLowerCase() === 'ok';
+    }
+
+    buildResumeAnswerPayload = uploadResult => {
+        const data = uploadResult?.data ?? uploadResult?.result ?? uploadResult?.questions ?? uploadResult?.answer ?? uploadResult;
+        if (data == null) {
+            return {};
+        }
+        return { resume: data };
+    }
+
     formatBackendResult = data => {
         const result = data?.data ?? data?.result ?? data?.questions ?? data?.answer ?? data;
 
         if (typeof result === 'string') {
-            return result;
+            return this.isOkResponse(result) ? '' : result;
         }
 
         if (result == null) {
@@ -22,9 +34,11 @@ export default class ResumeUpload extends Component {
         }
 
         try {
-            return JSON.stringify(result, null, 2);
+            const formatted = JSON.stringify(result, null, 2);
+            return this.isOkResponse(formatted) ? '' : formatted;
         } catch (err) {
-            return String(result);
+            const stringified = String(result);
+            return this.isOkResponse(stringified) ? '' : stringified;
         }
     }
 
@@ -59,17 +73,30 @@ export default class ResumeUpload extends Component {
         this.setState({ isUploading: true, error: '', status: '', backendResult: '' });
 
         try {
-            const { data } = await axios.post('/api/v1/upload/resume', form, {
+            const { data: uploadData } = await axios.post('/api/v1/upload/resume', form, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
 
-            const message = data?.message || data?.msg || '简历上传成功。';
+            const uploadMessage = uploadData?.message || uploadData?.msg || '';
+            const uploadStatus = this.isOkResponse(uploadMessage) ? '' : (uploadMessage || '简历上传成功。');
+
+            const resumeAnswerPayload = this.buildResumeAnswerPayload(uploadData);
+            const { data: answerData } = await axios.post('/api/v1/user/resume-answer', resumeAnswerPayload, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const formattedResult = this.formatBackendResult(answerData);
+            const answerMessage = answerData?.message || answerData?.msg || '';
+            const statusText = this.isOkResponse(answerMessage) ? uploadStatus : (answerMessage || uploadStatus);
+
             this.setState({
-                status: message,
+                status: statusText,
                 error: '',
-                backendResult: this.formatBackendResult(data),
+                backendResult: formattedResult,
             });
         } catch (err) {
             const message = err.response?.data?.message || err.response?.data?.error || err.message || '简历上传失败，请稍后重试。';
@@ -88,8 +115,8 @@ export default class ResumeUpload extends Component {
                 <div className="upload-shell">
                     <div className="upload-heading">
                         <span className="eyebrow">Interview question studio</span>
-                        <h1 id="resume-upload-title">把简历交给系统，把准备留给重点。</h1>
-                        <p id="resume-upload-desc">上传简历后，页面会展示后端返回的面试问题、追问方向或分析结果。</p>
+                        <h1 id="resume-upload-title">根据您的简历生成面试</h1>
+                        <p id="resume-upload-desc">上传简历后，页面会展示面试问题、追问方向或分析结果。</p>
                     </div>
 
                     <div className="upload-workspace">
